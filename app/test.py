@@ -7,9 +7,10 @@ class TestHello(unittest.TestCase):
         app.testing = True
         self.app = app.test_client()
 
+    # testing our routes
     def test_hello(self):
-        rv = self.app.get('/')
-        self.assertEqual(rv.status, '200 OK')
+        response = self.app.get('/')
+        self.assertEqual(response.status, '200 OK')
 
 
 if __name__ == '__main__':
