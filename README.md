@@ -13,7 +13,7 @@ A website built with Flask and Jenkins as CI/CD pipeline
 ## Building the Jenkins Pipeline
 Place the Jenkins file, in root of your folder.
 -   I created a Jenkins file, specifying the actions to be taken at each stage:
-    -   At stage 'build', I install all requirements in my requirements.txt file
+    -   At stage 'build', I create a virtual environment and install all requirements in my requirements.txt file
     -   At stage 'test', I run all my tests
     -   At stage 'deploy', I run my flask file
 ![image](https://user-images.githubusercontent.com/49791498/126041395-8220b35a-672d-4483-919b-75259bcb2dcc.png)
