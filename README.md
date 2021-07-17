@@ -15,5 +15,5 @@ A website built with Flask and Jenkins as CI/CD pipeline
     -   At stage 'build', I install all requirements in my requirements.txt file
     -   At stage 'test', I run all my tests
     -   At stage 'deploy', I run my flask file
-[result]()
+[image]()
 *result from Jenkins pipeline*
