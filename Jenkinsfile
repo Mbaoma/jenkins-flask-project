@@ -1,26 +1,17 @@
 pipeline {
-    agent {
-        dockerfile {
-            filename 'Dockerfile.jenkinsAgent'
-            additionalBuildArgs  '--build-arg JENKINSUID=`id -u jenkins` --build-arg JENKINSGID=`id -g jenkins` --build-arg DOCKERGID=`stat -c %g /var/run/docker.sock`'
-            args '-v /var/run/docker.sock:/var/run/docker.sock -u jenkins:docker'
-        }
-    }
-    stages {
-        stage('build') {
-            steps {
-                sh 'sh virtualenv venv && . venv/bin/activate && pip install -r requirements.txt'
-            }
-        }
-        stage('test') {
-            steps {
-                sh 'python -m unittest discover'
-            }
-        }
-        stage('deploy') {
-            steps {
-                sh 'python app/main.py'
-            }
-        }
+    agent any
+       stage('Get Source') {
+      // copy source code from local file system and test
+      // for a Dockerfile to build the Docker image
+      git ('https://github.com/upasana-mittal/flask-dockerized-jenkins.git')
+      if (!fileExists("Dockerfile")) {
+         error('Dockerfile missing.')
+      }
+   }
+    stage('Build Docker') {
+       // build the docker image from the source code using the BUILD_ID parameter in image name
+         sh "sudo docker build -t flask-app ."
+   }stage("run docker container"){
+        sh "sudo docker run -p 8000:8000 --name flask-app -d flask-app "
     }
 }
