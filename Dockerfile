@@ -1,26 +1,19 @@
-FROM debian:stretch-backports
-# Install Docker in the image, which adds a docker group
-RUN apt-get -y update && \
- apt-get -y install \
-   apt-transport-https \
-   ca-certificates \
-   curl \
-   gnupg \
-   lsb-release \
-   software-properties-common
+FROM jenkins/jenkins:alpine
 
-RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
-RUN add-apt-repository \
-   "deb [arch=amd64] https://download.docker.com/linux/debian \
-   $(lsb_release -cs) \
-   stable"
+ENV JENKINS_USER admin
+ENV JENKINS_PASS admin
 
-RUN apt-get -y update && \
- apt-get -y install \
-   docker-ce \
-   docker-ce-cli \
-   containerd.io
+# Skip initial setup
+ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
 
+
+COPY plugins.txt /usr/share/jenkins/plugins.txt
+RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/plugins.txt
+USER root
+RUN apk add docker
+RUN apk add py-pip
+RUN apk add python-dev libffi-dev openssl-dev gcc libc-dev make
+RUN pip install docker-compose
 RUN groupadd -g ${JENKINSGID} jenkins
 RUN groupmod -g ${DOCKERGID} docker
 RUN useradd -c "Jenkins user" -g ${JENKINSGID} -G ${DOCKERGID} -M -N -u ${JENKINSUID} jenkins
