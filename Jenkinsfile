@@ -21,7 +21,7 @@ pipeline {
         }
       }
     }
-    stage('build docker image'){
+    stage('build docker image and deploy'){
       agent any
       steps{
         sh 'docker build -t my-flask-image:latest .'
